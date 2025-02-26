@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CharacterCard from './CardofChar';
 import CharacterService from '../services/GetCharInfo';
-import { ApiResponse } from '../types/apitype'; // Import the shared types
+import { ApiResponse } from '../types/Info'; // Import the shared types
 
 const GetData: React.FC = () => {
   const [apiData, setApiData] = useState<ApiResponse | null>(null);

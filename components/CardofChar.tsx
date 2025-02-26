@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDarkMode } from '../context/DarkModeContext'; // Assuming DarkModeContext is correctly set up
-import { CharacterCardProps } from '../types/chartype';  // Import the Character type
+import { CharacterCardProps } from '../types/Character';  // Import the Character type
 
 const extractIdFromUrl = (url: string, type: string): string | null => {
   const match = url.match(/\/(\w+)\/(\d+)/);
