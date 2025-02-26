@@ -1,7 +1,7 @@
 
 import axios from 'axios';
-import { ApiResponse } from '../types/apitype'; // Import the shared types
-import { Character } from '../types/chartype';
+import { ApiResponse } from '../types/Info'; // Import the shared types
+import { Character } from '../types/Character';
 
 const instance = axios.create({
   baseURL: 'https://rickandmortyapi.com/api/',
