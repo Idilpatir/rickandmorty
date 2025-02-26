@@ -1,5 +1,5 @@
 
-import { Character } from './chartype'; 
+import { Character } from './Character'; 
 
 export interface Info {
   count: string; // Total number of characters
