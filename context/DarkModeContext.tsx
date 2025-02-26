@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { DarkModeContextType, DarkModeProviderProps } from '../types/darktype';
+import { DarkModeContextType, DarkModeProviderProps } from '../types/Darktype';
 
 const DarkModeContext = createContext<DarkModeContextType | undefined>(undefined);
 
