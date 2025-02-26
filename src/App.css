@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* Ensure the body and html take the full screen without hiding overflow */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: auto;   /* Enable vertical scrolling if content overflows */
+}
+
+/* Ensure the min-h-screen class allows scrolling if needed */
+.min-h-screen {
+  min-height: 100vh;
+  display: flex; /* Flexbox to center content vertically */
+  flex-direction: column;
+}
+
+.dark {
+  background-color: #2d2d2d;
+  color: white;
+}
+
+.bg-gray-900 {
+  background-color: #1a202c; /* Dark mode background */
+}
+
+.text-white {
+  color: white; /* Dark mode text */
+}
+
+.bg-white {
+  background-color: white; /* Light mode background */
+}
+
+.text-gray-900 {
+  color: #1a202c; /* Light mode text */
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Optional: Make sure content remains within the container */
+.grid {
+  display: grid;
+}
+
+
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
