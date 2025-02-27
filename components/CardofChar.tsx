@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDarkMode } from '../context/DarkModeContext'; 
 import { CharacterCardProps } from '../types/Character';  
 import CharacterService from '../services/GetCharInfo';  
+import LikeButton from '../context/LikingSection'; // Import the LikeButton component
 
 const extractIdFromUrl = (url: string, type: string): string | null => {
   const match = url.match(/\/(\w+)\/(\d+)/);
@@ -11,23 +12,15 @@ const extractIdFromUrl = (url: string, type: string): string | null => {
 function CharacterCard({ character }: CharacterCardProps) {
   const { isDarkMode } = useDarkMode(); // Fetch dark mode state from context
   const [isClicked, setIsClicked] = useState(false); // Modal state
-  const [liked, setLiked] = useState(false); // Like button state
   const [episodeData, setEpisodeData] = useState<{ name: string; episodeNumber: string } | null>(null); // State for episode data
 
   const handleClick = () => {
     setIsClicked(!isClicked); // Toggle modal visibility
   };
 
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the card click handler from triggering when clicking the Like button
-    setLiked(!liked); // Toggle liked state
-  };
-
   const handleModalClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent the click from propagating to the parent div (card) when clicking inside the modal
   };
-
-  const displayType = character.type || null;
 
   // Fetch episode data
   useEffect(() => {
@@ -48,7 +41,7 @@ function CharacterCard({ character }: CharacterCardProps) {
     };
 
     fetchEpisodeData();
-  }, [character.episode]);  // Dependency on character.episode to re-fetch when it changes
+  }, [character.episode]); // Dependency on character.episode to re-fetch when it changes
 
   // Status color logic
   const statusColor = character.status === 'Alive'
@@ -67,13 +60,8 @@ function CharacterCard({ character }: CharacterCardProps) {
       <div className='group hover:scale-105 transition-all duration-300'>
         {/* Container for Like and Status */}
         <div className="relative z-20">
-          <button
-            onClick={handleLike}
-            className={`absolute top-2 left-2 px-3 py-1 flex flex-col dark:text-white rounded-full z-10`}
-          >
-            {liked ? '❤️ Liked' : '🤍 Like'}
-          </button>
-
+          {/* Use LikeButton component */}
+          <LikeButton characterId={String(character.id)} />  {/* Convert to string */}
           <div
             className={`absolute top-2 right-2 flex items-center space-x-2 font-semibold z-10`}
           >
@@ -100,17 +88,11 @@ function CharacterCard({ character }: CharacterCardProps) {
             } p-6 rounded-lg w-4/5 max-w-4xl flex flex-col relative`}
             onClick={handleModalClick} // Prevent click from closing modal when clicking inside
           >
-            <button
-              onClick={handleLike}
-              className={`absolute top-2 left-2 px-3 py-1 flex flex-col dark:text-white rounded-full `}
-            >
-              {liked ? '❤️ Liked' : '🤍 Like'}
-            </button>
-
             <div className="text-center mb-4">
               <h3 className="text-3xl font-bold">Details of</h3>
               <h3 className="text-2xl font-bold">{character.name}</h3>
             </div>
+            <div><LikeButton characterId={String(character.id)} /></div>
 
             <div className="flex flex-col sm:flex-row w-full items-center sm:items-start">
               <div className="sm:w-1/2 pr-4 mt-5">
