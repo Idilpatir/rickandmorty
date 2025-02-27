@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDarkMode } from '../context/DarkModeContext'; // Assuming DarkModeContext is correctly set up
-import { CharacterCardProps } from '../types/Character';  // Import the Character type
+import { useDarkMode } from '../context/DarkModeContext'; 
+import { CharacterCardProps } from '../types/Character';  
+import CharacterService from '../services/GetCharInfo';  
 
 const extractIdFromUrl = (url: string, type: string): string | null => {
   const match = url.match(/\/(\w+)\/(\d+)/);
@@ -35,15 +36,19 @@ function CharacterCard({ character }: CharacterCardProps) {
         const episodeUrl = character.episode[0];
         const episodeId = extractIdFromUrl(episodeUrl, 'episode');
         if (episodeId) {
-          const response = await fetch(`https://rickandmortyapi.com/api/episode/${episodeId}`);
-          const data = await response.json();
-          setEpisodeData({ name: data.name, episodeNumber: data.id.toString() });
+          try {
+            // Use CharacterService to fetch episode data
+            const data = await CharacterService.getEpisodeData(episodeId);
+            setEpisodeData({ name: data.name, episodeNumber: data.id.toString() });
+          } catch (error) {
+            console.error('Error fetching episode data:', error);
+          }
         }
       }
     };
 
     fetchEpisodeData();
-  }, [character.episode]);
+  }, [character.episode]);  // Dependency on character.episode to re-fetch when it changes
 
   // Status color logic
   const statusColor = character.status === 'Alive'
@@ -59,11 +64,9 @@ function CharacterCard({ character }: CharacterCardProps) {
       } shadow-md rounded-lg p-4 w-full h-full cursor-pointer transition-all duration-300`}
       onClick={handleClick} // Open modal when card is clicked
     >
-      {/*card components are at same div cause of adding hover element */}
       <div className='group hover:scale-105 transition-all duration-300'>
         {/* Container for Like and Status */}
         <div className="relative z-20">
-          {/* Like Button - Positioned at the top-left, above the image */}
           <button
             onClick={handleLike}
             className={`absolute top-2 left-2 px-3 py-1 flex flex-col dark:text-white rounded-full z-10`}
@@ -71,7 +74,6 @@ function CharacterCard({ character }: CharacterCardProps) {
             {liked ? '❤️ Liked' : '🤍 Like'}
           </button>
 
-          {/* Status - Positioned at the top-right, above the image */}
           <div
             className={`absolute top-2 right-2 flex items-center space-x-2 font-semibold z-10`}
           >
@@ -79,12 +81,13 @@ function CharacterCard({ character }: CharacterCardProps) {
             <span className={`w-3 h-3 rounded-full ${statusColor}`} />
             <p className="text-sm text-white">{character.status}</p>
           </div>
+
           {/* Character Image */}
-          < img src={character.image} alt={character.name} className="w-full h-48 object-cover rounded-lg mb-4" />
-          {/* Character Name */}
+          <img src={character.image} alt={character.name} className="w-full h-48 object-cover rounded-lg mb-4" />
           <h2 className="text-xl font-bold mt-7 mb-2">{character.name}</h2>
         </div>
       </div>
+
       {/* Modal for additional character details */}
       {isClicked && (
         <div
@@ -97,7 +100,6 @@ function CharacterCard({ character }: CharacterCardProps) {
             } p-6 rounded-lg w-4/5 max-w-4xl flex flex-col relative`}
             onClick={handleModalClick} // Prevent click from closing modal when clicking inside
           >
-            {/* Like button inside the modal at the top-left */}
             <button
               onClick={handleLike}
               className={`absolute top-2 left-2 px-3 py-1 flex flex-col dark:text-white rounded-full `}
@@ -110,15 +112,12 @@ function CharacterCard({ character }: CharacterCardProps) {
               <h3 className="text-2xl font-bold">{character.name}</h3>
             </div>
 
-            {/* Flexbox Layout: Left side - Character Image, Right side - Character Details */}
             <div className="flex flex-col sm:flex-row w-full items-center sm:items-start">
-              <div className="sm:w-1/2 pr-4 mt-5 hover:scale-105 transition-all duration-300">
-                {/* Adjusting Image in Modal to not be cropped */}
+              <div className="sm:w-1/2 pr-4 mt-5">
                 <img src={character.image} alt={character.name} className="w-full h-auto object-cover rounded-lg" />
               </div>
 
               <div className="sm:w-1/2 pl-4 mt-5 flex flex-col justify-center">
-                {/* Align the text vertically to the center */}
                 <p className="mb-4 text-left">Species: {character.species}</p>
                 <p className="mb-4 text-left">Status: {character.status}</p>
                 <p className="mb-4 text-left">Gender: {character.gender}</p>
@@ -143,14 +142,12 @@ function CharacterCard({ character }: CharacterCardProps) {
                 <p className="mb-4 text-left">
                   First Episode:{" "}
                   {episodeData ? (
-                    <>
-                      <a
-                        href={`https://rickandmortyapi.com/api/episode/${episodeData.episodeNumber}`}
-                        className="hover:scale-105 transition-all duration-300 hover:text-emerald-300 hover:underline"
-                      >
-                        "{episodeData.name}" / Episode-{episodeData.episodeNumber}
-                      </a>
-                    </>
+                    <a
+                      href={`https://rickandmortyapi.com/api/episode/${episodeData.episodeNumber}`}
+                      className="hover:scale-105 transition-all duration-300 hover:text-emerald-300 hover:underline"
+                    >
+                      "{episodeData.name}" / Episode-{episodeData.episodeNumber}
+                    </a>
                   ) : (
                     <span>Loading...</span>
                   )}
